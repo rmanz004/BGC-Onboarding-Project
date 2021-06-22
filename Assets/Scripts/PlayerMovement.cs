@@ -6,53 +6,53 @@ public class PlayerMovement : MonoBehaviour
 {
     public float turnSpeed = 20f;
 
-    Animator m_Animator;
-    Rigidbody m_Rigidbody;
-    AudioSource m_AudioSource;
-    Vector3 m_Movement;
-    Quaternion m_Rotation = Quaternion.identity;
+    public Animator animator;
+    public Rigidbody rigidBody;
+    public AudioSource audioSource;
+    public Vector3 movement;
+    public Quaternion rotation = Quaternion.identity;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        m_Animator = GetComponent<Animator>();
-        m_Rigidbody = GetComponent<Rigidbody>();
-        m_AudioSource = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
+        rigidBody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        m_Movement.Set(horizontal, 0f, vertical);
-        m_Movement.Normalize();
+        movement.Set(horizontal, 0f, vertical);
+        movement.Normalize();
 
         bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
         bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;
-        m_Animator.SetBool("IsWalking", isWalking);
+        animator.SetBool("IsWalking", isWalking);
 
         if (isWalking)
         {
-            if (!m_AudioSource.isPlaying)
+            if (!audioSource.isPlaying)
             {
-                m_AudioSource.Play();
+                audioSource.Play();
             }
         }
         else
         {
-            m_AudioSource.Stop();
+            audioSource.Stop();
         }
 
-        Vector3 desiredForward = Vector3.RotateTowards(transform.forward, m_Movement, turnSpeed * Time.deltaTime, 0f);
-        m_Rotation = Quaternion.LookRotation(desiredForward);
+        Vector3 desiredForward = Vector3.RotateTowards(transform.forward, movement, turnSpeed * Time.deltaTime, 0f);
+        rotation = Quaternion.LookRotation(desiredForward);
     }
 
-    void OnAnimatorMove()
+    private void OnAnimatorMove()
     {
-        m_Rigidbody.MovePosition(m_Rigidbody.position + m_Movement * m_Animator.deltaPosition.magnitude);
-        m_Rigidbody.MoveRotation(m_Rotation);
+        rigidBody.MovePosition(rigidBody.position + movement * animator.deltaPosition.magnitude);
+        rigidBody.MoveRotation(rotation);
     }
 }

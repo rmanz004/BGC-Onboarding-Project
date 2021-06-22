@@ -8,61 +8,73 @@ public class GameEnding : MonoBehaviour
     public float fadeDuration = 1f;
     public float displayImageDuration = 1f;
     public GameObject player;
+    public CanvasGroup faderCanvas;
     public CanvasGroup exitBackgroundImageCanvasGroup;
     public AudioSource exitAudio;
     public CanvasGroup caughtBackgroundImageCanvasGroup;
     public AudioSource caughtAudio;
 
-    bool m_IsPlayerAtExit;
-    bool m_IsPlayerCaught;
-    float m_Timer;
-    bool m_HasAudioPlayed;
+    public bool IsPlayerAtExit;
+    public bool IsPlayerCaught;
+    public float Timer;
+    public bool HasAudioPlayed;
 
-    void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == player)
         {
-            m_IsPlayerAtExit = true;
+            IsPlayerAtExit = true;
         }
     }
 
     public void CaughtPlayer()
     {
-        m_IsPlayerCaught = true;
+        IsPlayerCaught = true;
     }
 
-    void Update()
+    private void Update()
     {
-        if (m_IsPlayerAtExit)
+        if (IsPlayerAtExit)
         {
             EndLevel(exitBackgroundImageCanvasGroup, false, exitAudio);
         }
-        else if (m_IsPlayerCaught)
+        else if (IsPlayerCaught)
         {
             EndLevel(caughtBackgroundImageCanvasGroup, true, caughtAudio);
         }
     }
 
-    void EndLevel(CanvasGroup imageCanvasGroup, bool doRestart, AudioSource audioSource)
+    private void EndLevel(CanvasGroup imageCanvasGroup, bool doRestart, AudioSource audioSource)
     {
-        if (!m_HasAudioPlayed)
+        if (!HasAudioPlayed)
         {
             audioSource.Play();
-            m_HasAudioPlayed = true;
+            HasAudioPlayed = true;
         }
-        m_Timer += Time.deltaTime;
-        imageCanvasGroup.alpha = m_Timer / fadeDuration;
+        Timer += Time.deltaTime;
+        imageCanvasGroup.alpha = Timer / fadeDuration;
 
-        if (m_Timer > fadeDuration + displayImageDuration)
+        if (Timer > fadeDuration + displayImageDuration)
         {
             if (doRestart)
             {
-                SceneManager.LoadScene(0);
+                faderCanvas.interactable = true;
+                faderCanvas.blocksRaycasts = true;
             }
             else
             {
-                Application.Quit();
+                faderCanvas.interactable = true;
+                faderCanvas.blocksRaycasts = true;
             }
         }
+
     }
+
+    public void backToMenu()
+    {
+        faderCanvas.interactable = false;
+        faderCanvas.blocksRaycasts = false;
+        SceneManager.LoadScene(0);
+    }
+
 }

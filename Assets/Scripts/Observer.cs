@@ -6,28 +6,27 @@ public class Observer : MonoBehaviour
 {
     public Transform player;
     public GameEnding gameEnding;
+    public bool isPlayerInRange;
 
-    bool m_IsPlayerInRange;
-
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.transform == player)
         {
-            m_IsPlayerInRange = true;
+            isPlayerInRange = true;
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.transform == player)
         {
-            m_IsPlayerInRange = false;
+            isPlayerInRange = false;
         }
     }
 
-    void Update()
+    private void Update()
     {
-        if (m_IsPlayerInRange)
+        if (isPlayerInRange)
         {
             Vector3 direction = player.position - transform.position + Vector3.up;
             Ray ray = new Ray(transform.position, direction);
