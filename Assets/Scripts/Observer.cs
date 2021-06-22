@@ -7,13 +7,13 @@ public class Observer : MonoBehaviour
     public Transform player;
     public GameEnding gameEnding;
 
-    bool m_IsPlayerInRange;
+    bool IsPlayerInRange;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.transform == player)
         {
-            m_IsPlayerInRange = true;
+            IsPlayerInRange = true;
         }
     }
 
@@ -21,13 +21,13 @@ public class Observer : MonoBehaviour
     {
         if (other.transform == player)
         {
-            m_IsPlayerInRange = false;
+            IsPlayerInRange = false;
         }
     }
 
     void Update()
     {
-        if (m_IsPlayerInRange)
+        if (IsPlayerInRange)
         {
             Vector3 direction = player.position - transform.position + Vector3.up;
             Ray ray = new Ray(transform.position, direction);

@@ -12,6 +12,8 @@ public class WaypointPatrol : MonoBehaviour
     void Start()
     {
         navMeshAgent.SetDestination(waypoints[0].position);
+        navMeshAgent.speed = MainMenuManager.ghostSpeed;
+        navMeshAgent.acceleration = MainMenuManager.ghostAcceleration;
     }
 
     void Update()
