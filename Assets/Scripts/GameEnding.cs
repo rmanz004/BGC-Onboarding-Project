@@ -8,17 +8,18 @@ public class GameEnding : MonoBehaviour
     public float fadeDuration = 1f;
     public float displayImageDuration = 1f;
     public GameObject player;
+    public CanvasGroup faderCanvas;
     public CanvasGroup exitBackgroundImageCanvasGroup;
     public AudioSource exitAudio;
     public CanvasGroup caughtBackgroundImageCanvasGroup;
     public AudioSource caughtAudio;
 
-    bool IsPlayerAtExit;
-    bool IsPlayerCaught;
-    float Timer;
-    bool HasAudioPlayed;
+    public bool IsPlayerAtExit;
+    public bool IsPlayerCaught;
+    public float Timer;
+    public bool HasAudioPlayed;
 
-    void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == player)
         {
@@ -31,7 +32,7 @@ public class GameEnding : MonoBehaviour
         IsPlayerCaught = true;
     }
 
-    void Update()
+    private void Update()
     {
         if (IsPlayerAtExit)
         {
@@ -43,7 +44,7 @@ public class GameEnding : MonoBehaviour
         }
     }
 
-    void EndLevel(CanvasGroup imageCanvasGroup, bool doRestart, AudioSource audioSource)
+    private void EndLevel(CanvasGroup imageCanvasGroup, bool doRestart, AudioSource audioSource)
     {
         if (!HasAudioPlayed)
         {
@@ -57,12 +58,23 @@ public class GameEnding : MonoBehaviour
         {
             if (doRestart)
             {
-                SceneManager.LoadScene(0);
+                faderCanvas.interactable = true;
+                faderCanvas.blocksRaycasts = true;
             }
             else
             {
-                Application.Quit();
+                faderCanvas.interactable = true;
+                faderCanvas.blocksRaycasts = true;
             }
         }
+
     }
+
+    public void backToMenu()
+    {
+        faderCanvas.interactable = false;
+        faderCanvas.blocksRaycasts = false;
+        SceneManager.LoadScene(0);
+    }
+
 }
